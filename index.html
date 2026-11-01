@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="assets/Icon.svg">
+<title>Tasky – Local Skills, Simplified</title>
+<meta name="description" content="Tasky connects students and local talents with individuals and small businesses for short, one-time tasks in Algeria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+/* ─────────────────── CSS CUSTOM PROPERTIES ─────────────────── */
+:root {
+  --navy: #0F172A;
+  --navy2: #1E293B;
+  --orange: #FF630F;
+  --orange-dark: #E8520A;
+  --gold: #FFC300;
+  --cyan: #00D8FF;
+  --cyan-dim: rgba(0,216,255,.12);
+  --slate: #F7F9FC;
+  --white: #FFFFFF;
+  --muted: #64748B;
+  --light-border: rgba(15,23,42,.06);
+  --card-shadow: 0 4px 24px rgba(15,23,42,.07);
+  --card-hover-shadow: 0 20px 50px rgba(15,23,42,.13);
+  --radius: 24px;
+  --radius-sm: 16px;
+  --transition: .35s cubic-bezier(.4,0,.2,1);
+}
+
+/* ─────────────────── RESET & BASE ─────────────────── */
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+[id] { scroll-margin-top:80px; }
+body {
+  font-family:'Inter','Noto Sans Arabic',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  line-height:1.7; color:var(--navy); background:var(--white); overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+img,svg { display:block; max-width:100%; }
+a { text-decoration:none; color:inherit; }
+a:focus-visible, button:focus-visible { outline:3px solid var(--cyan); outline-offset:3px; }
+body.rtl { direction:rtl; }
+
+/* ─────────────────── UTILITY ─────────────────── */
+.container { max-width:1200px; margin:0 auto; padding:0 2rem; }
+.gradient-text {
+  background:linear-gradient(135deg,var(--orange) 0%,var(--gold) 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+
+/* ─────────────────── SCROLL ANIMATIONS ─────────────────── */
+.reveal {
+  opacity:0; transform:translateY(40px);
+  transition:opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
+}
+.reveal.from-left { transform:translateX(-50px); }
+.reveal.from-right { transform:translateX(50px); }
+body.rtl .reveal.from-left { transform:translateX(50px); }
+body.rtl .reveal.from-right { transform:translateX(-50px); }
+.reveal.from-scale { transform:scale(.88); }
+.reveal.visible {
+  opacity:1; transform:translateY(0) translateX(0) scale(1);
+}
+.stagger-1 { transition-delay:.08s; }
+.stagger-2 { transition-delay:.16s; }
+.stagger-3 { transition-delay:.24s; }
+.stagger-4 { transition-delay:.32s; }
+.stagger-5 { transition-delay:.40s; }
+.stagger-6 { transition-delay:.48s; }
+
+/* ─────────────────── HEADER ─────────────────── */
+.header {
+  position:fixed; top:0; width:100%; z-index:1000;
+  background:rgba(255,255,255,.82); backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid var(--light-border);
+  transition:background var(--transition), box-shadow var(--transition);
+}
+.header.scrolled {
+  background:rgba(255,255,255,.96);
+  box-shadow:0 4px 30px rgba(15,23,42,.1);
+}
+.nav {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.85rem 2rem; max-width:1200px; margin:0 auto; min-height:72px;
+}
+.logo-link { display:flex; align-items:center; gap:.6rem; }
+/* ── Logo placeholder: replace the <div> below with your <img> ── */
+.logo-placeholder {
+  width:42px; height:42px; border-radius:12px;
+  background:linear-gradient(135deg,var(--orange),var(--gold));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:1.15rem; color:#fff;
+  box-shadow:0 4px 14px rgba(255,99,15,.35);
+}
+.logo-wordmark {
+  font-size:1.6rem; font-weight:900; letter-spacing:-.5px;
+}
+.nav-links { display:flex; gap:2.2rem; list-style:none; align-items:center; }
+.nav-links a {
+  font-weight:600; font-size:.95rem; color:var(--muted);
+  transition:color var(--transition); position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-4px; left:0; width:0; height:2.5px;
+  border-radius:2px; background:var(--orange); transition:width var(--transition);
+}
+.nav-links a:hover { color:var(--navy); }
+.nav-links a:hover::after { width:100%; }
+.lang-switch {
+  display:inline-flex; align-items:center;
+  background:rgba(15,23,42,.06); padding:3px;
+  border-radius:50px; gap:2px;
+}
+.lang-btn {
+  padding:.35rem .75rem; border:none;
+  background:transparent; color:var(--muted);
+  font-weight:700; font-size:.82rem; border-radius:50px;
+  cursor:pointer; transition:all var(--transition);
+  font-family:inherit; line-height:1.2;
+}
+.lang-btn.active {
+  background:var(--navy); color:#fff;
+  box-shadow:0 2px 8px rgba(15,23,42,.15);
+}
+.lang-btn:hover:not(.active) {
+  color:var(--orange);
+}
+
+/* Mobile menu toggle */
+.menu-toggle {
+  display:none; flex-direction:column; justify-content:center; align-items:center;
+  gap:5px; background:none; border:none; cursor:pointer;
+  width:40px; height:40px; padding:8px 6px; z-index:1001;
+  flex-shrink:0; border-radius:8px; transition:background var(--transition);
+}
+.menu-toggle:hover { background:rgba(15,23,42,.05); }
+.menu-toggle span {
+  display:block; width:22px; height:2.5px; background:var(--navy);
+  border-radius:2px; transition:all var(--transition);
+}
+.menu-toggle.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+.menu-toggle.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.menu-toggle.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+
+/* ─────────────────── HERO ─────────────────── */
+.hero {
+  margin-top:72px; min-height:calc(100vh - 72px);
+  display:flex; align-items:center; position:relative; overflow:hidden;
+  background:linear-gradient(160deg,#0B1220 0%,#131D32 50%,#162038 100%);
+  padding:4rem 0;
+}
+/* Animated grid */
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255,99,15,.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0,216,255,.06) 0%, transparent 50%);
+}
+.hero-grid {
+  position:absolute; inset:-50%; width:200%; height:200%;
+  background-image:
+    linear-gradient(rgba(0,216,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,216,255,.06) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:gridMove 30s linear infinite;
+}
+@keyframes gridMove { to { transform:translate(60px,60px); } }
+
+/* Floating orbs */
+.hero-orb {
+  position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; opacity:.5;
+  animation:orbFloat 8s ease-in-out infinite alternate;
+}
+.hero-orb-1 { width:400px; height:400px; background:rgba(255,99,15,.12); top:-10%; right:-5%; animation-delay:0s; }
+.hero-orb-2 { width:300px; height:300px; background:rgba(0,216,255,.1); bottom:0; left:10%; animation-delay:3s; }
+.hero-orb-3 { width:200px; height:200px; background:rgba(255,195,0,.08); top:40%; left:50%; animation-delay:5s; }
+@keyframes orbFloat {
+  0% { transform:translate(0,0) scale(1); }
+  100% { transform:translate(30px,-30px) scale(1.12); }
+}
+
+.hero-inner {
+  position:relative; z-index:1; display:grid;
+  grid-template-columns:1fr 1fr; gap:4rem; align-items:center;
+  max-width:1200px; margin:0 auto; padding:0 2rem; width:100%;
+}
+.hero-content { color:#fff; }
+.hero-badge {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.45rem 1.1rem; border-radius:50px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+  font-size:.85rem; font-weight:600; color:rgba(255,255,255,.85);
+  margin-bottom:1.5rem; animation:fadeInUp .7s ease both;
+}
+.hero-badge-dot {
+  width:8px; height:8px; border-radius:50%; background:var(--cyan);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(1.4); } }
+
+.hero h1 {
+  font-size:clamp(2.4rem,5vw,4rem); line-height:1.1; font-weight:900;
+  letter-spacing:-.02em; margin-bottom:1.5rem;
+  animation:fadeInUp .7s ease .15s both;
+}
+.hero h1 .highlight {
+  background:linear-gradient(135deg,var(--orange),var(--gold));
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero-desc {
+  font-size:1.2rem; line-height:1.8; opacity:.85; max-width:32em;
+  margin-bottom:2.5rem; animation:fadeInUp .7s ease .3s both;
+}
+.hero-actions {
+  display:flex; gap:1rem; flex-wrap:wrap; align-items:center;
+  animation:fadeInUp .7s ease .45s both;
+}
+.btn-primary {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:1rem 2.4rem; background:var(--orange); color:#fff;
+  border-radius:50px; font-weight:700; font-size:1.05rem;
+  border:none; cursor:pointer; font-family:inherit;
+  box-shadow:0 10px 35px rgba(255,99,15,.35);
+  transition:all var(--transition); position:relative; overflow:hidden;
+}
+.btn-primary::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);
+  transform:translateX(-120%); transition:transform .6s ease;
+}
+.btn-primary:hover::before { transform:translateX(120%); }
+.btn-primary:hover {
+  transform:translateY(-3px);
+  box-shadow:0 16px 45px rgba(255,99,15,.45);
+}
+.btn-outline {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:1rem 2.4rem; background:transparent;
+  color:#fff; border:2px solid rgba(255,255,255,.25);
+  border-radius:50px; font-weight:700; font-size:1.05rem;
+  cursor:pointer; font-family:inherit;
+  transition:all var(--transition);
+}
+.btn-outline:hover {
+  border-color:var(--cyan); color:var(--cyan);
+  transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,216,255,.15);
+}
+.btn-icon {
+  width:1.15rem; height:1.15rem;
+  display:inline-block; vertical-align:middle;
+  transition:transform var(--transition);
+}
+.btn-primary:hover .btn-icon {
+  transform:translateX(4px);
+}
+body.rtl .btn-primary:hover .btn-icon {
+  transform:translateX(-4px);
+}
+body.rtl .arrow-icon {
+  transform:rotate(180deg);
+}
+.heart-icon {
+  width:15px; height:15px;
+  display:inline-block; vertical-align:middle;
+  fill:#ef4444; stroke:#ef4444; margin:0 3px;
+}
+
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(35px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* Phone Mockup */
+.hero-visual { display:flex; justify-content:center; align-items:center; }
+.phone-mockup {
+  position:relative; width:100%; max-width:320px;
+  animation:fadeInUp .8s ease .3s both;
+}
+.phone-float { animation:phoneFloat 6s ease-in-out infinite; }
+@keyframes phoneFloat {
+  0%,100% { transform:translateY(0) rotate(0deg); }
+  50% { transform:translateY(-18px) rotate(1deg); }
+}
+.phone-frame {
+  width:100%; background:linear-gradient(145deg,#1a1a2e,#0a0a15);
+  border-radius:44px; padding:12px;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  position:relative;
+}
+.phone-notch {
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  width:120px; height:28px; background:#0a0a15;
+  border-radius:0 0 18px 18px; z-index:10;
+}
+.phone-notch::after {
+  content:''; position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  width:50px; height:6px; background:rgba(255,255,255,.08); border-radius:3px;
+}
+.phone-screen {
+  width:100%; aspect-ratio:9/19.5; background:#fff; border-radius:36px;
+  overflow:hidden; position:relative;
+}
+.placeholder-screen {
+  width:100%; height:100%;
+  background:linear-gradient(160deg,#f8fafc 0%,#e8f4f8 50%,#fff4ed 100%);
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:2rem; text-align:center; gap:.8rem;
+}
+.placeholder-icon { font-size:3.5rem; }
+.placeholder-name { font-size:1.4rem; font-weight:800; color:var(--navy); }
+.placeholder-text { color:var(--orange); font-size:.92rem; font-weight:700; }
+
+/* Phone glow */
+.phone-glow {
+  position:absolute; width:120%; height:120%; top:-10%; left:-10%;
+  background:radial-gradient(circle, rgba(255,99,15,.12) 0%, transparent 60%);
+  pointer-events:none; filter:blur(40px);
+  animation:glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse { 0%,100% { opacity:.6; } 50% { opacity:1; } }
+
+/* ─────────────────── SOCIAL PROOF / STATS BAR ─────────────────── */
+.stats-bar {
+  background:var(--white); border-bottom:1px solid var(--light-border);
+  padding:3rem 0;
+}
+.stats-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:2rem;
+  text-align:center; max-width:1200px; margin:0 auto; padding:0 2rem;
+}
+.stat-item { padding:1rem; }
+.stat-icon {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  margin-bottom:.6rem;
+}
+.stat-icon .lucide {
+  width:2.2rem;
+  height:2.2rem;
+  stroke:var(--orange);
+}
+.stat-flag-icon {
+  width:42px;
+  height:28px;
+  object-fit:cover;
+  border-radius:5px;
+  box-shadow:0 3px 12px rgba(15,23,42,.15), 0 0 0 1px rgba(15,23,42,.08);
+  display:inline-block;
+  vertical-align:middle;
+  transition:transform var(--transition);
+}
+.stat-item:hover .stat-flag-icon {
+  transform:scale(1.12);
+}
+.stat-label {
+  font-size:.95rem; color:var(--muted); font-weight:500; line-height:1.5;
+}
+
+/* ─────────────────── PROBLEM SECTION ─────────────────── */
+.problem-section {
+  padding:6rem 0; background:var(--slate); position:relative;
+  overflow:hidden;
+}
+.problem-section::before {
+  content:''; position:absolute; top:0; right:0;
+  width:400px; height:400px; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,99,15,.04),transparent 70%);
+  pointer-events:none;
+}
+.problem-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;
+}
+.problem-content h2 {
+  font-size:clamp(1.8rem,3vw,2.6rem); font-weight:800;
+  line-height:1.2; margin-bottom:1.5rem;
+}
+.problem-list { list-style:none; display:flex; flex-direction:column; gap:1.2rem; }
+.problem-list li {
+  display:flex; align-items:flex-start; gap:1rem;
+  font-size:1.05rem; color:var(--muted); line-height:1.7;
+}
+.problem-list .icon-wrap {
+  flex-shrink:0; width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.problem-list .icon-wrap .lucide {
+  width:1.35rem; height:1.35rem;
+}
+.problem-list .icon-wrap.red { background:rgba(239,68,68,.1); color:#ef4444; }
+.problem-list .icon-wrap.amber { background:rgba(245,158,11,.1); color:#f59e0b; }
+.problem-list .icon-wrap.blue { background:rgba(59,130,246,.1); color:#3b82f6; }
+
+.solution-card {
+  background:var(--white); border-radius:var(--radius); padding:3rem;
+  box-shadow:var(--card-shadow); position:relative; overflow:hidden;
+}
+.solution-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg,var(--orange),var(--gold),var(--cyan));
+}
+.solution-card h3 {
+  font-size:1.6rem; font-weight:800; margin-bottom:1rem;
+}
+.solution-card p {
+  color:var(--muted); font-size:1.05rem; line-height:1.8; margin-bottom:1.5rem;
+}
+.solution-tags { display:flex; flex-wrap:wrap; gap:.6rem; }
+.solution-tag {
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.4rem 1rem; border-radius:50px; font-size:.84rem; font-weight:600;
+  background:rgba(0,216,255,.08); color:#0891b2; border:1px solid rgba(0,216,255,.15);
+}
+.solution-tag .lucide {
+  width:.95rem; height:.95rem; stroke:#0891b2;
+}
+
+/* ─────────────────── FEATURES ─────────────────── */
+.features-section { padding:6rem 0; }
+.section-header { text-align:center; margin-bottom:4rem; }
+.section-header .overline {
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-size:.85rem; font-weight:700; color:var(--orange);
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:.8rem;
+}
+.section-header .overline .lucide {
+  width:1.05rem; height:1.05rem;
+}
+.section-header h2 {
+  font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:900;
+  line-height:1.15; margin-bottom:1rem;
+}
+.section-header p {
+  font-size:1.15rem; color:var(--muted); max-width:540px; margin:0 auto;
+}
+.features-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;
+}
+.feature-card {
+  padding:2rem; background:var(--white); border-radius:var(--radius);
+  border:1px solid var(--light-border);
+  transition:all var(--transition); position:relative; overflow:hidden;
+}
+.feature-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:0;
+  background:linear-gradient(180deg,rgba(0,216,255,.04),transparent);
+  transition:height var(--transition);
+}
+.feature-card:hover {
+  transform:translateY(-6px); box-shadow:var(--card-hover-shadow);
+  border-color:rgba(0,216,255,.2);
+}
+.feature-card:hover::before { height:100%; }
+.feature-icon-wrap {
+  width:56px; height:56px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:1.2rem; position:relative;
+}
+.feature-icon-wrap .lucide {
+  width:1.75rem; height:1.75rem;
+}
+.feature-icon-wrap.orange { background:rgba(255,99,15,.1); }
+.feature-icon-wrap.orange .lucide { stroke:var(--orange); }
+.feature-icon-wrap.cyan { background:rgba(0,216,255,.1); }
+.feature-icon-wrap.cyan .lucide { stroke:#06b6d4; }
+.feature-icon-wrap.gold { background:rgba(255,195,0,.12); }
+.feature-icon-wrap.gold .lucide { stroke:#f59e0b; }
+.feature-icon-wrap.green { background:rgba(16,185,129,.1); }
+.feature-icon-wrap.green .lucide { stroke:#10b981; }
+.feature-icon-wrap.purple { background:rgba(139,92,246,.1); }
+.feature-icon-wrap.purple .lucide { stroke:#8b5cf6; }
+.feature-icon-wrap.rose { background:rgba(244,63,94,.1); }
+.feature-icon-wrap.rose .lucide { stroke:#f43f5e; }
+.feature-card h3 { font-size:1.15rem; font-weight:700; margin-bottom:.6rem; }
+.feature-card p { color:var(--muted); font-size:.95rem; line-height:1.7; }
+
+/* ─────────────────── AUDIENCE / FOR WHO ─────────────────── */
+.audience-section { padding:6rem 0; background:var(--slate); }
+.audience-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:2rem;
+}
+.audience-card {
+  background:var(--white); border-radius:var(--radius); padding:2.5rem;
+  position:relative; overflow:hidden;
+  transition:all var(--transition); border:1px solid var(--light-border);
+}
+.audience-card:hover {
+  transform:translateY(-4px); box-shadow:var(--card-hover-shadow);
+}
+.audience-card-accent {
+  position:absolute; top:0; left:0; width:5px; height:100%; border-radius:0 4px 4px 0;
+}
+body.rtl .audience-card-accent {
+  left:auto; right:0; border-radius:4px 0 0 4px;
+}
+.audience-card-accent.orange { background:linear-gradient(180deg,var(--orange),var(--gold)); }
+.audience-card-accent.cyan { background:linear-gradient(180deg,var(--cyan),#06b6d4); }
+.audience-card-header {
+  display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;
+}
+.audience-card-icon {
+  width:56px; height:56px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+}
+.audience-card-icon .lucide {
+  width:1.85rem; height:1.85rem;
+}
+.audience-card-icon.orange-bg { background:rgba(255,99,15,.1); }
+.audience-card-icon.orange-bg .lucide { stroke:var(--orange); }
+.audience-card-icon.cyan-bg { background:rgba(0,216,255,.1); }
+.audience-card-icon.cyan-bg .lucide { stroke:#06b6d4; }
+.audience-card h3 { font-size:1.35rem; font-weight:800; }
+.audience-card p { color:var(--muted); font-size:1.05rem; line-height:1.8; margin-bottom:1.2rem; }
+.audience-perks { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+.audience-perks li {
+  display:flex; align-items:center; gap:.6rem;
+  font-size:.95rem; color:var(--navy); font-weight:500;
+}
+.audience-perks li::before {
+  content:'✓'; display:flex; align-items:center; justify-content:center;
+  width:22px; height:22px; border-radius:50%; font-size:.7rem; font-weight:800;
+  flex-shrink:0;
+}
+.audience-card:first-child .audience-perks li::before {
+  background:rgba(255,99,15,.1); color:var(--orange);
+}
+.audience-card:last-child .audience-perks li::before {
+  background:rgba(0,216,255,.1); color:#0891b2;
+}
+
+/* ─────────────────── HOW IT WORKS ─────────────────── */
+.how-section { padding:6rem 0; }
+.steps-timeline {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  position:relative; padding-top:3rem;
+}
+.steps-timeline::before {
+  content:''; position:absolute; top:calc(3rem + 35px);
+  left:calc(12.5% + 0px); right:calc(12.5% + 0px);
+  height:3px; background:linear-gradient(90deg,var(--orange),var(--gold),var(--cyan),#8b5cf6);
+  border-radius:2px;
+}
+.step-item { text-align:center; position:relative; padding:0 1rem; }
+.step-dot {
+  width:72px; height:72px; border-radius:50%; margin:0 auto 1.5rem;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem; font-weight:800; color:#fff;
+  position:relative; z-index:1;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+}
+.step-dot.s1 { background:linear-gradient(135deg,var(--orange),var(--orange-dark)); }
+.step-dot.s2 { background:linear-gradient(135deg,var(--gold),#e6ad00); }
+.step-dot.s3 { background:linear-gradient(135deg,var(--cyan),#06a5c7); }
+.step-dot.s4 { background:linear-gradient(135deg,#8b5cf6,#7c3aed); }
+.step-dot::after {
+  content:''; position:absolute; inset:-5px; border-radius:50%;
+  border:2px dashed rgba(0,0,0,.08); animation:spinSlow 20s linear infinite;
+}
+@keyframes spinSlow { to { transform:rotate(360deg); } }
+.step-item h3 { font-size:1.1rem; font-weight:700; margin-bottom:.5rem; }
+.step-item p { color:var(--muted); font-size:.93rem; line-height:1.7; }
+
+/* ─────────────────── TASK CATEGORIES ─────────────────── */
+.categories-section {
+  padding:6rem 0; background:linear-gradient(160deg,#0B1220 0%,#131D32 100%);
+  color:#fff; position:relative; overflow:hidden;
+}
+.categories-section::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 10% 90%, rgba(255,99,15,.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(0,216,255,.05) 0%, transparent 40%);
+}
+.categories-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1.2rem;
+  position:relative; z-index:1;
+}
+.category-card {
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--radius-sm); padding:1.8rem 1.2rem; text-align:center;
+  transition:all var(--transition); cursor:default;
+}
+.category-card:hover {
+  background:rgba(255,255,255,.1); transform:translateY(-4px);
+  box-shadow:0 12px 30px rgba(0,0,0,.3); border-color:rgba(255,255,255,.15);
+}
+.category-icon-box {
+  width:52px; height:52px; border-radius:14px;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto .85rem; transition:all var(--transition);
+}
+.category-card:hover .category-icon-box {
+  background:rgba(255,99,15,.2); border-color:rgba(255,99,15,.4);
+  transform:translateY(-3px) scale(1.08);
+}
+.category-icon-box .lucide {
+  width:1.6rem; height:1.6rem; stroke:var(--cyan); transition:stroke var(--transition);
+}
+.category-card:hover .category-icon-box .lucide { stroke:var(--gold); }
+.category-card h4 { font-size:.95rem; font-weight:600; opacity:.95; }
+
+/* ─────────────────── TRUST / WHY TASKY ─────────────────── */
+.trust-section { padding:6rem 0; }
+.trust-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;
+}
+.trust-list { list-style:none; display:flex; flex-direction:column; gap:1.5rem; }
+.trust-list li {
+  display:flex; align-items:flex-start; gap:1.2rem;
+  padding:1.5rem; background:var(--slate); border-radius:var(--radius-sm);
+  transition:all var(--transition);
+}
+.trust-list li:hover {
+  background:var(--white); box-shadow:var(--card-shadow);
+  transform:translateX(4px);
+}
+body.rtl .trust-list li:hover { transform:translateX(-4px); }
+.trust-icon {
+  flex-shrink:0; width:48px; height:48px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,216,255,.1);
+}
+.trust-icon .lucide {
+  width:1.5rem; height:1.5rem; stroke:#0891b2;
+}
+.trust-list h4 { font-size:1.05rem; font-weight:700; margin-bottom:.3rem; }
+.trust-list p { color:var(--muted); font-size:.93rem; line-height:1.7; }
+
+.trust-visual { position:relative; }
+.trust-card-stack {
+  position:relative; max-width:400px; margin:0 auto; min-height:350px;
+}
+.trust-floating-card {
+  position:absolute; background:var(--white); border-radius:var(--radius-sm);
+  padding:1.5rem; box-shadow:var(--card-shadow); border:1px solid var(--light-border);
+  transition:all var(--transition);
+}
+.trust-floating-card:hover { transform:translateY(-4px) !important; box-shadow:var(--card-hover-shadow); }
+.tfc-1 { top:0; left:0; width:240px; z-index:3; }
+.tfc-2 { top:60px; right:0; width:220px; z-index:2; }
+.tfc-3 { bottom:0; left:30px; width:260px; z-index:1; }
+.tfc-stars { display:flex; gap:3px; align-items:center; margin-bottom:.4rem; }
+.tfc-stars .lucide-star { width:1rem; height:1rem; fill:var(--gold); stroke:var(--gold); }
+.tfc-stars .lucide-star.empty { fill:transparent; stroke:#cbd5e1; }
+.tfc-name { font-weight:700; font-size:.95rem; }
+.tfc-role { color:var(--muted); font-size:.82rem; }
+.tfc-badge {
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.25rem .7rem; border-radius:50px; font-size:.75rem; font-weight:600;
+  background:rgba(16,185,129,.1); color:#059669; margin-top:.5rem;
+}
+.tfc-badge .lucide { width:.85rem; height:.85rem; stroke:#059669; }
+
+/* ─────────────────── TRANSPARENCY NOTE ─────────────────── */
+.notice-section { padding:4rem 0; }
+.notice-banner {
+  background:var(--slate); border-radius:var(--radius);
+  padding:2.5rem 3rem; display:flex; align-items:flex-start; gap:1.5rem;
+  border-left:5px solid var(--gold); position:relative;
+}
+body.rtl .notice-banner { border-left:none; border-right:5px solid var(--gold); }
+.notice-icon {
+  flex-shrink:0; width:52px; height:52px; border-radius:14px;
+  background:rgba(255,195,0,.12); display:flex; align-items:center;
+  justify-content:center;
+}
+.notice-icon .lucide { width:1.6rem; height:1.6rem; stroke:#d97706; }
+.notice-banner h3 { font-size:1.2rem; font-weight:700; margin-bottom:.5rem; }
+.notice-banner p { color:var(--muted); font-size:1rem; line-height:1.8; }
+
+/* ─────────────────── CTA / WAITLIST ─────────────────── */
+.cta-section {
+  padding:6rem 0; background:linear-gradient(160deg,#0B1220,#131D32);
+  color:#fff; text-align:center; position:relative; overflow:hidden;
+}
+.cta-section::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 30% 50%, rgba(255,99,15,.08) 0%, transparent 50%),
+    radial-gradient(circle at 70% 50%, rgba(0,216,255,.06) 0%, transparent 50%);
+}
+.cta-content { position:relative; z-index:1; max-width:600px; margin:0 auto; }
+.cta-content h2 {
+  font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:900;
+  line-height:1.15; margin-bottom:1rem;
+}
+.cta-content p { font-size:1.15rem; opacity:.85; margin-bottom:2.5rem; }
+.waitlist-form {
+  display:flex; gap:.8rem; max-width:480px; margin:0 auto 1.5rem;
+}
+.waitlist-input {
+  flex:1; padding:1rem 1.5rem; border-radius:50px;
+  border:2px solid rgba(255,255,255,.15); background:rgba(255,255,255,.06);
+  color:#fff; font-size:1rem; font-family:inherit;
+  transition:border-color var(--transition);
+}
+.waitlist-input::placeholder { color:rgba(255,255,255,.4); }
+.waitlist-input:focus { outline:none; border-color:var(--orange); }
+.waitlist-submit {
+  padding:1rem 2rem; background:var(--orange); color:#fff;
+  border:none; border-radius:50px; font-weight:700; font-size:1rem;
+  cursor:pointer; font-family:inherit; white-space:nowrap;
+  transition:all var(--transition);
+  box-shadow:0 8px 25px rgba(255,99,15,.35);
+}
+.waitlist-submit:hover {
+  transform:translateY(-2px); box-shadow:0 12px 35px rgba(255,99,15,.5);
+}
+.cta-note { font-size:.88rem; opacity:.5; }
+.download-buttons { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem; }
+.download-btn {
+  padding:.9rem 1.8rem; background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15); color:#fff;
+  border-radius:14px; font-weight:600; font-size:.95rem;
+  font-family:inherit; display:inline-flex; align-items:center; gap:.6rem;
+  cursor:not-allowed; opacity:.7; transition:all var(--transition);
+}
+
+/* ─────────────────── FOOTER ─────────────────── */
+.footer {
+  background:var(--navy); color:rgba(255,255,255,.6);
+  padding:3rem 0 2rem;
+}
+.footer-inner {
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:1.5rem; max-width:1200px; margin:0 auto; padding:0 2rem;
+}
+.footer-brand { display:flex; align-items:center; gap:.6rem; }
+.footer-brand .logo-placeholder {
+  width:34px; height:34px; font-size:.9rem; border-radius:10px;
+}
+.footer-brand span { font-weight:800; font-size:1.15rem; color:#fff; }
+.footer-links { display:flex; gap:2rem; list-style:none; }
+.footer-links a { color:rgba(255,255,255,.5); font-size:.9rem; font-weight:500; transition:color var(--transition); }
+.footer-links a:hover { color:var(--orange); }
+.footer-copy { width:100%; text-align:center; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,.06); font-size:.88rem; }
+
+/* ─────────────────── RESPONSIVE ─────────────────── */
+@media (max-width:1024px) {
+  .features-grid { grid-template-columns:repeat(2,1fr); }
+  .steps-timeline { grid-template-columns:repeat(2,1fr); gap:3rem; }
+  .steps-timeline::before { display:none; }
+}
+
+@media (max-width:768px) {
+  /* Layout & Spacing */
+  .container { padding:0 1.5rem; }
+  .problem-section,
+  .features-section,
+  .audience-section,
+  .how-section,
+  .categories-section,
+  .trust-section { padding:4rem 0; }
+  .section-header { margin-bottom:2.2rem; }
+  .section-header h2 { font-size:clamp(1.7rem, 5.5vw, 2.2rem); }
+  .section-header p { font-size:1rem; }
+
+  /* Navigation & Header */
+  .header { min-height:64px; }
+  .nav { padding:.6rem 1.2rem; min-height:64px; }
+  .nav-links {
+    display:none; position:fixed; top:64px; left:0; width:100%;
+    max-height:calc(100vh - 64px); overflow-y:auto;
+    background:var(--white); flex-direction:column; padding:1.8rem 1.5rem; gap:.6rem;
+    box-shadow:0 16px 36px rgba(15,23,42,.12); border-bottom:1px solid var(--light-border);
+    transform:translateY(-10px); opacity:0; pointer-events:none;
+    transition:all var(--transition); z-index:999;
+  }
+  .nav-links.open { display:flex; transform:translateY(0); opacity:1; pointer-events:auto; }
+  .nav-links a {
+    font-size:1.05rem; padding:.65rem .8rem; border-radius:10px; width:100%;
+    display:block;
+  }
+  .nav-links a:hover { background:rgba(15,23,42,.04); }
+  body.rtl .nav-links { text-align:right; }
+  .menu-toggle { display:flex; }
+  .lang-switch { padding:2px; }
+  .lang-btn { padding:.28rem .55rem; font-size:.78rem; }
+
+  /* Hero */
+  .hero { margin-top:64px; padding:3rem 0 3.5rem; min-height:auto; }
+  .hero-inner { grid-template-columns:1fr; gap:2.8rem; text-align:center; }
+  .hero-badge { margin-bottom:1.2rem; }
+  .hero h1 { font-size:clamp(2rem, 6.5vw, 3rem); line-height:1.15; }
+  .hero-desc { font-size:1.05rem; line-height:1.7; margin:0 auto 2rem; max-width:28em; }
+  .hero-actions {
+    flex-direction:column; width:100%; max-width:320px;
+    margin:0 auto; gap:.8rem;
+  }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-outline {
+    width:100%; justify-content:center; padding:.95rem 1.6rem; font-size:1rem;
+  }
+  .hero-visual { order:2; }
+  .phone-mockup { max-width:230px; margin:0 auto; }
+  .phone-frame { border-radius:38px; padding:10px; }
+  .phone-screen { border-radius:28px; }
+  .hero-orb-1 { width:220px; height:220px; }
+  .hero-orb-2 { width:180px; height:180px; }
+  .hero-orb-3 { display:none; }
+
+  /* Stats Bar */
+  .stats-bar { padding:2rem 0; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); gap:1rem; }
+  .stat-item { padding:.75rem .4rem; }
+  .stat-label { font-size:.88rem; }
+  .stat-icon { min-height:42px; margin-bottom:.4rem; }
+  .stat-icon .lucide { width:1.9rem; height:1.9rem; }
+  .stat-flag-icon { width:38px; height:25px; }
+
+  /* Problem */
+  .problem-grid { grid-template-columns:1fr; gap:2.2rem; }
+  .problem-content .section-header { text-align:center !important; }
+  .problem-list { gap:1.1rem; }
+  .problem-list li { gap:.9rem; font-size:.95rem; }
+  .solution-card { padding:2rem 1.5rem; border-radius:var(--radius-sm); }
+  .solution-card h3 { font-size:1.35rem; }
+  .solution-card p { font-size:.95rem; }
+
+  /* Features */
+  .features-grid { grid-template-columns:1fr; gap:1.2rem; }
+  .feature-card { padding:1.8rem 1.4rem; }
+  .feature-icon-wrap { width:46px; height:46px; margin-bottom:1rem; }
+  .feature-card h3 { font-size:1.15rem; }
+  .feature-card p { font-size:.92rem; }
+
+  /* Audience */
+  .audience-grid { grid-template-columns:1fr; gap:1.5rem; }
+  .audience-card { padding:2rem 1.5rem; border-radius:var(--radius-sm); }
+  .audience-card-header { gap:.8rem; }
+  .audience-card-icon { width:46px; height:46px; }
+  .audience-card h3 { font-size:1.2rem; }
+  .audience-perks { gap:.65rem; margin-top:1.2rem; }
+  .audience-perks li { font-size:.92rem; }
+
+  /* How It Works */
+  .steps-timeline { grid-template-columns:1fr; gap:2.2rem; }
+  .step-dot { width:64px; height:64px; font-size:1.4rem; margin-bottom:1rem; }
+  .step-item h3 { font-size:1.15rem; }
+  .step-item p { font-size:.92rem; }
+
+  /* Categories */
+  .categories-grid { grid-template-columns:repeat(2,1fr); gap:.9rem; }
+  .category-card { padding:1.2rem .8rem; }
+  .category-icon-box { width:46px; height:46px; margin-bottom:.65rem; }
+  .category-icon-box .lucide { width:1.35rem; height:1.35rem; }
+  .category-card h4 { font-size:.86rem; }
+
+  /* Trust */
+  .trust-grid { grid-template-columns:1fr; gap:2.5rem; }
+  .trust-visual { order:-1; }
+  .trust-card-stack { min-height:260px; max-width:290px; margin:0 auto; position:relative; }
+  .trust-floating-card { padding:1rem 1.1rem; border-radius:14px; }
+  .tfc-1 { width:185px; top:0; left:0; }
+  .tfc-2 { width:175px; top:42px; right:0; }
+  .tfc-3 { width:205px; bottom:0; left:15px; }
+  .tfc-name { font-size:.88rem; }
+  .tfc-role { font-size:.76rem; }
+  .tfc-badge { font-size:.7rem; padding:.2rem .55rem; }
+  .trust-list { gap:1rem; }
+  .trust-list li { padding:1.2rem 1rem; gap:.9rem; }
+  .trust-icon { width:42px; height:42px; }
+  .trust-icon .lucide { width:1.3rem; height:1.3rem; }
+  .trust-list h4 { font-size:1rem; }
+  .trust-list p { font-size:.9rem; }
+
+  /* Notice */
+  .notice-section { padding:2rem 0; }
+  .notice-banner { flex-direction:column; padding:1.6rem 1.3rem; gap:.9rem; border-radius:18px; }
+  .notice-icon { width:44px; height:44px; }
+  .notice-banner h3 { font-size:1.1rem; }
+  .notice-banner p { font-size:.92rem; line-height:1.65; }
+
+  /* Waitlist CTA */
+  .cta-section { padding:4rem 0 3.5rem; }
+  .cta-content h2 { font-size:clamp(1.6rem, 5vw, 2.2rem); }
+  .cta-content p { font-size:1rem; margin-bottom:1.8rem; }
+  .waitlist-form { flex-direction:column; width:100%; max-width:380px; margin:0 auto 1.2rem; gap:.75rem; }
+  .waitlist-input { width:100%; text-align:center; padding:.9rem 1.4rem; font-size:.95rem; }
+  .waitlist-submit { width:100%; justify-content:center; padding:.9rem 1.6rem; font-size:.95rem; }
+  .download-buttons { margin-top:1.2rem; }
+  .download-btn { width:100%; max-width:320px; justify-content:center; padding:.85rem 1.4rem; font-size:.9rem; }
+
+  /* Footer */
+  .footer { padding:2.5rem 0 1.8rem; }
+  .footer-inner { flex-direction:column; text-align:center; gap:1.3rem; }
+  .footer-links { flex-wrap:wrap; justify-content:center; gap:1.2rem; }
+  .footer-copy { font-size:.84rem; padding-top:1.2rem; }
+}
+
+@media (max-width:480px) {
+  .container { padding:0 1.1rem; }
+  .nav { padding:.5rem .9rem; }
+  .logo-link img { height:30px; }
+  .lang-btn { padding:.24rem .45rem; font-size:.74rem; }
+  .hero { padding:2.5rem 0 3rem; }
+  .hero-desc { font-size:1rem; }
+  .phone-mockup { max-width:210px; }
+  .stats-grid { gap:.75rem; }
+  .stat-label { font-size:.82rem; }
+  .solution-card { padding:1.5rem 1.1rem; }
+  .audience-card { padding:1.6rem 1.15rem; }
+  .trust-card-stack { max-width:265px; min-height:235px; }
+  .tfc-1 { width:170px; }
+  .tfc-2 { width:160px; top:35px; }
+  .tfc-3 { width:185px; left:10px; }
+  .trust-list li { padding:1rem .85rem; font-size:.88rem; }
+  .categories-grid { gap:.65rem; }
+  .category-card { padding:1rem .6rem; }
+}
+
+@media (max-width:360px) {
+  .container { padding:0 .9rem; }
+  .lang-switch { gap:1px; }
+  .lang-btn { padding:.2rem .35rem; font-size:.7rem; }
+  .hero h1 { font-size:1.85rem; }
+  .trust-card-stack { max-width:245px; min-height:220px; }
+  .tfc-1 { width:155px; }
+  .tfc-2 { width:145px; }
+  .tfc-3 { width:170px; }
+}
+
+/* ─────────────────── REDUCED MOTION ─────────────────── */
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+  html { scroll-behavior:auto; }
+  .reveal { opacity:1!important; transform:none!important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header" id="top">
+  <nav class="nav">
+    <a href="#" class="logo-link" aria-label="Tasky">
+      <img src="assets/Logo flat - colored dark.png" alt="Tasky" height="38" style="object-fit:contain;">
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#problem"    data-en="The Problem"         data-fr="Le Problème"         data-ar="المشكلة">The Problem</a></li>
+      <li><a href="#features"   data-en="Features"            data-fr="Fonctionnalités"     data-ar="المميزات">Features</a></li>
+      <li><a href="#audience"   data-en="Who It's For"        data-fr="Pour Qui"            data-ar="لمن هذا التطبيق">Who It's For</a></li>
+      <li><a href="#how"        data-en="How It Works"        data-fr="Comment ça marche"   data-ar="كيف يعمل">How It Works</a></li>
+      <li><a href="#categories" data-en="Categories"          data-fr="Catégories"          data-ar="الفئات">Categories</a></li>
+      <li><a href="#waitlist"   data-en="Join"                data-fr="Rejoindre"           data-ar="انضم">Join</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:.8rem;">
+      <div class="lang-switch">
+        <button class="lang-btn active" type="button" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" type="button" data-lang="fr" onclick="setLanguage('fr')">FR</button>
+        <button class="lang-btn" type="button" data-lang="ar" onclick="setLanguage('ar')">عربي</button>
+      </div>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span data-en="Coming Soon" data-fr="Bientôt disponible" data-ar="قريباً">Coming Soon</span>
+      </div>
+      <h1 data-en="Your <span class='highlight'>local skills</span>, simplified." data-fr="Vos <span class='highlight'>compétences locales</span>, simplifiées." data-ar="<span class='highlight'>مهاراتك المحلية</span>، بكل بساطة.">Your <span class="highlight">local skills</span>, simplified.</h1>
+      <p class="hero-desc" data-en="Tasky connects students and local talents with individuals, small businesses, and associations who need help with short, one-time tasks." data-fr="Tasky connecte les étudiants et talents locaux avec les particuliers, petites entreprises et associations qui ont besoin d'un coup de main ponctuel." data-ar="Tasky تربط الطلاب والمواهب المحلية بالأفراد والشركات الصغيرة والجمعيات التي تحتاج مساعدة مؤقتة.">Tasky connects students and local talents with individuals, small businesses, and associations who need help with short, one-time tasks.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn-primary">
+          <span data-en="Join the Waitlist" data-fr="Rejoindre la liste d'attente" data-ar="انضم لقائمة الانتظار">Join the Waitlist</span>
+          <i data-lucide="arrow-right" class="btn-icon arrow-icon"></i>
+        </a>
+        <a href="#how" class="btn-outline">
+          <span data-en="How It Works" data-fr="Comment ça marche" data-ar="كيف يعمل">How It Works</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-mockup phone-float">
+        <div class="phone-glow"></div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="placeholder-screen">
+              <img src="assets/Icon.svg" alt="Tasky" style="width:80px;height:80px;">
+              <div class="placeholder-name">Tasky</div>
+              <p class="placeholder-text" data-en="Coming soon on Android" data-fr="Bientôt disponible sur Android" data-ar="قريباً على أندرويد">Coming soon on Android</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ STATS BAR ═══════════════ -->
+<section class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-item reveal stagger-1">
+      <div class="stat-icon"><i data-lucide="target"></i></div>
+      <div class="stat-label" data-en="One-time tasks" data-fr="Missions ponctuelles" data-ar="مهام مؤقتة">One-time tasks</div>
+    </div>
+    <div class="stat-item reveal stagger-2">
+      <div class="stat-icon">
+        <img src="https://flagcdn.com/dz.svg" width="42" height="28" alt="Drapeau Algérie" class="stat-flag-icon" loading="lazy">
+      </div>
+      <div class="stat-label" data-en="Built for Algeria" data-fr="Pensé pour l'Algérie" data-ar="مصمّم للجزائر">Built for Algeria</div>
+    </div>
+    <div class="stat-item reveal stagger-3">
+      <div class="stat-icon"><i data-lucide="languages"></i></div>
+      <div class="stat-label" data-en="Arabic, French &amp; English" data-fr="Arabe, Français &amp; Anglais" data-ar="العربية، الفرنسية والإنجليزية">Arabic, French &amp; English</div>
+    </div>
+    <div class="stat-item reveal stagger-4">
+      <div class="stat-icon"><i data-lucide="smartphone"></i></div>
+      <div class="stat-label" data-en="Android App" data-fr="Application Android" data-ar="تطبيق أندرويد">Android App</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROBLEM ═══════════════ -->
+<section id="problem" class="problem-section">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="problem-content reveal from-left">
+        <div class="section-header" style="text-align:start;">
+          <div class="overline"><i data-lucide="zap"></i> <span data-en="The Problem" data-fr="Le Problème" data-ar="المشكلة">The Problem</span></div>
+          <h2 data-en="Finding local help shouldn't be this complicated." data-fr="Trouver de l'aide locale ne devrait pas être si compliqué." data-ar="العثور على مساعدة محلية لا يجب أن يكون معقداً.">Finding local help shouldn't be this complicated.</h2>
+        </div>
+        <ul class="problem-list">
+          <li>
+            <div class="icon-wrap red"><i data-lucide="x-circle"></i></div>
+            <span data-en="Students want flexible ways to earn money with skills they already have, without committing to a rigid part-time job." data-fr="Les étudiants veulent gagner de l'argent avec leurs compétences, mais les jobs à temps partiel ne sont pas assez flexibles." data-ar="يريد الطلاب كسب المال بمهاراتهم، لكن الوظائف الجزئية ليست مرنة بما يكفي.">Students want flexible ways to earn money with skills they already have, without committing to a rigid part-time job.</span>
+          </li>
+          <li>
+            <div class="icon-wrap amber"><i data-lucide="alert-triangle"></i></div>
+            <span data-en="Clients have no trusted place to find local help. They rely on social media and word of mouth without reviews." data-fr="Les clients n'ont pas de plateforme locale de confiance. Ils comptent sur le bouche-à-oreille et les réseaux sociaux." data-ar="لا يملك العملاء منصة محلية موثوقة. يعتمدون على التوصيات الشخصية ومواقع التواصل.">Clients have no trusted place to find local help. They rely on social media and word of mouth without reviews.</span>
+          </li>
+          <li>
+            <div class="icon-wrap blue"><i data-lucide="credit-card"></i></div>
+            <span data-en="International freelancing platforms don't fit Algeria, especially when it comes to local payment methods." data-fr="Les plateformes de freelance internationales ne s'adaptent pas à l'Algérie, notamment pour les moyens de paiement." data-ar="منصات العمل الحر الدولية لا تناسب الجزائر، خاصة فيما يتعلق بوسائل الدفع.">International freelancing platforms don't fit Algeria, especially when it comes to local payment methods.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="reveal from-right">
+        <div class="solution-card">
+          <h3 class="gradient-text" data-en="The Solution: Tasky" data-fr="La solution : Tasky" data-ar="الحل: Tasky">The Solution: Tasky</h3>
+          <p data-en="A dedicated local platform connecting skills and needs directly. No unnecessary middlemen, no hassle. Just the right people at the right time." data-fr="Un espace local qui connecte directement les talents et les besoins. Pas d'intermédiaire inutile, pas de complexité. Juste les bonnes personnes au bon moment." data-ar="فضاء محلي يربط المواهب بالاحتياجات مباشرة. بدون وسيط غير ضروري ولا تعقيد. فقط الأشخاص المناسبون في الوقت المناسب.">A dedicated local platform connecting skills and needs directly. No unnecessary middlemen, no hassle. Just the right people at the right time.</p>
+          <div class="solution-tags">
+            <span class="solution-tag"><i data-lucide="graduation-cap"></i> <span data-en="Students" data-fr="Étudiants" data-ar="طلاب">Students</span></span>
+            <span class="solution-tag"><i data-lucide="store"></i> <span data-en="Small Businesses" data-fr="PME" data-ar="شركات صغيرة">Small Businesses</span></span>
+            <span class="solution-tag"><i data-lucide="users"></i> <span data-en="Associations" data-fr="Associations" data-ar="جمعيات">Associations</span></span>
+            <span class="solution-tag"><i data-lucide="user"></i> <span data-en="Individuals" data-fr="Particuliers" data-ar="أفراد">Individuals</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<section id="features" class="features-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="overline"><i data-lucide="sparkles"></i> <span data-en="Features" data-fr="Fonctionnalités" data-ar="المميزات">Features</span></div>
+      <h2 data-en="Everything you need, nothing you don't." data-fr="Tout ce dont vous avez besoin, rien de superflu." data-ar="كل ما تحتاجه، بدون أي شيء زائد.">Everything you need, nothing you don't.</h2>
+      <p data-en="Simple, effective tools to post, discover, and complete tasks with confidence." data-fr="Des outils simples et efficaces pour publier, trouver et réaliser des missions." data-ar="أدوات بسيطة وفعالة لنشر المهام والعثور عليها وإنجازها.">Simple, effective tools to post, discover, and complete tasks with confidence.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal stagger-1">
+        <div class="feature-icon-wrap orange"><i data-lucide="search"></i></div>
+        <h3 data-en="Search &amp; Filters" data-fr="Recherche &amp; Filtres" data-ar="بحث وفلاتر">Search &amp; Filters</h3>
+        <p data-en="Find tasks by city, category, budget, and deadline. Fast, direct, and precise." data-fr="Trouvez des missions par ville, catégorie, budget et délai. Rapide et précis." data-ar="ابحث عن المهام حسب المدينة والفئة والميزانية والمهلة. سريع ودقيق.">Find tasks by city, category, budget, and deadline. Fast, direct, and precise.</p>
+      </div>
+      <div class="feature-card reveal stagger-2">
+        <div class="feature-icon-wrap cyan"><i data-lucide="message-square"></i></div>
+        <h3 data-en="Built-in Chat" data-fr="Messagerie Intégrée" data-ar="محادثة مباشرة">Built-in Chat</h3>
+        <p data-en="Discuss task requirements directly within the app and easily share contact details." data-fr="Discutez des détails directement dans l'application. Partagez vos liens de contact." data-ar="ناقش التفاصيل مباشرة داخل التطبيق. شارك روابط التواصل.">Discuss task requirements directly within the app and easily share contact details.</p>
+      </div>
+      <div class="feature-card reveal stagger-3">
+        <div class="feature-icon-wrap gold"><i data-lucide="star"></i></div>
+        <h3 data-en="Two-way Ratings" data-fr="Évaluations Mutuelles" data-ar="تقييمات متبادلة">Two-way Ratings</h3>
+        <p data-en="Both sides rate each other after every completed task. Transparency builds genuine trust." data-fr="Les deux parties se notent après chaque mission. La transparence crée la confiance." data-ar="يقيّم الطرفان بعضهما بعد كل مهمة. الشفافية تبني الثقة.">Both sides rate each other after every completed task. Transparency builds genuine trust.</p>
+      </div>
+      <div class="feature-card reveal stagger-4">
+        <div class="feature-icon-wrap green"><i data-lucide="shield-check"></i></div>
+        <h3 data-en="Verification Badges" data-fr="Badges de Vérification" data-ar="شارات التحقق">Verification Badges</h3>
+        <p data-en="Student and identity badges confirm verified status so you can connect with confidence." data-fr="Badges étudiant et pièce d'identité pour montrer que votre identité a été vérifiée." data-ar="شارات الطالب وبطاقة الهوية لإثبات أن هويتك تم التحقق منها.">Student and identity badges confirm verified status so you can connect with confidence.</p>
+      </div>
+      <div class="feature-card reveal stagger-5">
+        <div class="feature-icon-wrap purple"><i data-lucide="briefcase"></i></div>
+        <h3 data-en="Profiles &amp; Portfolio" data-fr="Profils &amp; Portfolio" data-ar="ملف شخصي وأعمال">Profiles &amp; Portfolio</h3>
+        <p data-en="Showcase your skills, portfolio samples, and verified reviews to win more opportunities." data-fr="Présentez vos compétences, réalisations et avis pour décrocher plus de missions." data-ar="اعرض مهاراتك وأعمالك وتقييماتك للحصول على مهام أكثر.">Showcase your skills, portfolio samples, and verified reviews to win more opportunities.</p>
+      </div>
+      <div class="feature-card reveal stagger-6">
+        <div class="feature-icon-wrap rose"><i data-lucide="bell"></i></div>
+        <h3 data-en="Smart Notifications" data-fr="Notifications Intelligentes" data-ar="إشعارات ذكية">Smart Notifications</h3>
+        <p data-en="Get notified instantly about matching tasks in your city and upcoming deadlines." data-fr="Recevez des alertes pour les missions qui correspondent à vos compétences et délais." data-ar="احصل على تنبيهات للمهام التي تتوافق مع مهاراتك والمواعيد النهائية.">Get notified instantly about matching tasks in your city and upcoming deadlines.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ AUDIENCE ═══════════════ -->
+<section id="audience" class="audience-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="overline"><i data-lucide="users"></i> <span data-en="Who It's For" data-fr="Pour qui ?" data-ar="لمن هذا التطبيق؟">Who It's For</span></div>
+      <h2 data-en="One platform for those who offer and those who need." data-fr="Un même espace pour ceux qui proposent et ceux qui cherchent." data-ar="فضاء واحد لمن يقدّم الخدمة ولمن يبحث عنها.">One platform for those who offer and those who need.</h2>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card reveal from-left">
+        <div class="audience-card-accent orange"></div>
+        <div class="audience-card-header">
+          <div class="audience-card-icon orange-bg"><i data-lucide="graduation-cap"></i></div>
+          <h3 data-en="Providers &amp; Students" data-fr="Prestataires &amp; Étudiants" data-ar="مقدمو الخدمات والطلاب">Providers &amp; Students</h3>
+        </div>
+        <p data-en="Have a skill? Turn it into income on your own schedule. No rigid contracts, no fixed hours." data-fr="Vous avez un talent ? Transformez-le en revenus, à votre rythme. Pas de contrat, pas d'horaires imposés." data-ar="لديك موهبة؟ حوّلها إلى دخل، بوتيرتك الخاصة. بدون عقود أو جداول مفروضة.">Have a skill? Turn it into income on your own schedule. No rigid contracts, no fixed hours.</p>
+        <ul class="audience-perks">
+          <li data-en="Pick tasks that match your skills" data-fr="Choisissez vos missions" data-ar="اختر مهامك">Pick tasks that match your skills</li>
+          <li data-en="Build a visible portfolio &amp; track record" data-fr="Créez un portfolio visible" data-ar="أنشئ معرض أعمال مرئي">Build a visible portfolio &amp; track record</li>
+          <li data-en="Grow reputation through ratings" data-fr="Gagnez en réputation avec les avis" data-ar="اكتسب سمعة من خلال التقييمات">Grow reputation through ratings</li>
+          <li data-en="Work in person or remotely" data-fr="Travaillez sur place ou à distance" data-ar="اعمل في الموقع أو عن بُعد">Work in person or remotely</li>
+        </ul>
+      </div>
+      <div class="audience-card reveal from-right">
+        <div class="audience-card-accent cyan"></div>
+        <div class="audience-card-header">
+          <div class="audience-card-icon cyan-bg"><i data-lucide="building-2"></i></div>
+          <h3 data-en="Clients, SMBs &amp; Associations" data-fr="Clients, PME &amp; Associations" data-ar="العملاء والشركات والجمعيات">Clients, SMBs &amp; Associations</h3>
+        </div>
+        <p data-en="Need quick, quality help? Post your task and find a dependable local provider with transparent ratings." data-fr="Besoin d'un coup de main ? Publiez votre mission et trouvez quelqu'un de fiable, avec des avis vérifiables." data-ar="تحتاج مساعدة؟ انشر مهمتك واعثر على شخص موثوق بتقييمات يمكنك التحقق منها.">Need quick, quality help? Post your task and find a dependable local provider with transparent ratings.</p>
+        <ul class="audience-perks">
+          <li data-en="Post a task in under 2 minutes" data-fr="Publiez une mission en 2 minutes" data-ar="انشر مهمة في دقيقتين">Post a task in under 2 minutes</li>
+          <li data-en="Review profiles, portfolios and ratings" data-fr="Consultez profils, portfolios et avis" data-ar="تصفّح الملفات والأعمال والتقييمات">Review profiles, portfolios and ratings</li>
+          <li data-en="Choose your helper or receive offers" data-fr="Choisissez votre prestataire" data-ar="اختر مقدّم الخدمة بنفسك">Choose your helper or receive offers</li>
+          <li data-en="Rate your experience and build trust" data-fr="Évaluez et soyez évalué" data-ar="قيّم وكُن مُقيَّماً">Rate your experience and build trust</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section id="how" class="how-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="overline"><i data-lucide="workflow"></i> <span data-en="How It Works" data-fr="Comment ça marche" data-ar="كيف يعمل">How It Works</span></div>
+      <h2 data-en="Four simple steps." data-fr="Quatre étapes simples." data-ar="أربع خطوات بسيطة.">Four simple steps.</h2>
+      <p data-en="From posting a task to the final mutual review." data-fr="De la publication de la mission à l'évaluation finale." data-ar="من نشر المهمة إلى التقييم النهائي.">From posting a task to the final mutual review.</p>
+    </div>
+    <div class="steps-timeline">
+      <div class="step-item reveal stagger-1">
+        <div class="step-dot s1">1</div>
+        <h3 data-en="Post" data-fr="Publiez" data-ar="انشر">Post</h3>
+        <p data-en="The client posts the task: description, budget, deadline, and location." data-fr="Le client détaille sa mission : description, budget, délai et lieu." data-ar="يوضح العميل مهمته: الوصف، الميزانية، المهلة والموقع.">The client posts the task: description, budget, deadline, and location.</p>
+      </div>
+      <div class="step-item reveal stagger-2">
+        <div class="step-dot s2">2</div>
+        <h3 data-en="Apply" data-fr="Postulez" data-ar="قدّم طلباً">Apply</h3>
+        <p data-en="Providers browse and apply, or the client directly selects a provider." data-fr="Les prestataires parcourent et postulent, ou le client choisit directement." data-ar="يتصفح مقدمو الخدمات ويتقدمون، أو يختار العميل مباشرة.">Providers browse and apply, or the client directly selects a provider.</p>
+      </div>
+      <div class="step-item reveal stagger-3">
+        <div class="step-dot s3">3</div>
+        <h3 data-en="Deliver" data-fr="Réalisez" data-ar="أنجز">Deliver</h3>
+        <p data-en="Both sides agree, discuss in chat, and complete the task smoothly." data-fr="Ils se mettent d'accord, échangent et réalisent la mission." data-ar="يتفقان ويتواصلان وينجزان المهمة.">Both sides agree, discuss in chat, and complete the task smoothly.</p>
+      </div>
+      <div class="step-item reveal stagger-4">
+        <div class="step-dot s4">4</div>
+        <h3 data-en="Review" data-fr="Évaluez" data-ar="قيّم">Review</h3>
+        <p data-en="Both sides leave a rating and review. Community trust grows task by task." data-fr="Les deux parties laissent une évaluation. La confiance se construit mission après mission." data-ar="يترك الطرفان تقييماً. الثقة تُبنى مهمة بعد مهمة.">Both sides leave a rating and review. Community trust grows task by task.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TASK CATEGORIES ═══════════════ -->
+<section id="categories" class="categories-section">
+  <div class="container">
+    <div class="section-header reveal" style="color:#fff;">
+      <div class="overline" style="color:var(--gold);"><i data-lucide="layout-grid"></i> <span data-en="Task Types" data-fr="Types de missions" data-ar="أنواع المهام">Task Types</span></div>
+      <h2 data-en="Whatever your need, someone has the skill." data-fr="Quel que soit votre besoin, quelqu'un peut vous aider." data-ar="مهما كانت حاجتك، هناك من يساعدك.">Whatever your need, someone has the skill.</h2>
+      <p style="color:rgba(255,255,255,.6);" data-en="A snapshot of popular tasks posted on Tasky." data-fr="Voici quelques exemples de missions publiées sur Tasky." data-ar="إليك بعض الأمثلة عن المهام المنشورة على Tasky.">A snapshot of popular tasks posted on Tasky.</p>
+    </div>
+    <div class="categories-grid">
+      <div class="category-card reveal stagger-1">
+        <div class="category-icon-box"><i data-lucide="palette"></i></div>
+        <h4 data-en="Graphic Design" data-fr="Design Graphique" data-ar="تصميم جرافيكي">Graphic Design</h4>
+      </div>
+      <div class="category-card reveal stagger-2">
+        <div class="category-icon-box"><i data-lucide="video"></i></div>
+        <h4 data-en="Video Editing" data-fr="Montage Vidéo" data-ar="مونتاج فيديو">Video Editing</h4>
+      </div>
+      <div class="category-card reveal stagger-3">
+        <div class="category-icon-box"><i data-lucide="languages"></i></div>
+        <h4 data-en="Translation" data-fr="Traduction" data-ar="ترجمة">Translation</h4>
+      </div>
+      <div class="category-card reveal stagger-4">
+        <div class="category-icon-box"><i data-lucide="presentation"></i></div>
+        <h4 data-en="Presentations" data-fr="Présentations" data-ar="عروض تقديمية">Presentations</h4>
+      </div>
+      <div class="category-card reveal stagger-5">
+        <div class="category-icon-box"><i data-lucide="wrench"></i></div>
+        <h4 data-en="Tech Support" data-fr="Support Technique" data-ar="دعم تقني">Tech Support</h4>
+      </div>
+      <div class="category-card reveal stagger-6">
+        <div class="category-icon-box"><i data-lucide="pen-tool"></i></div>
+        <h4 data-en="Copywriting" data-fr="Rédaction" data-ar="كتابة محتوى">Copywriting</h4>
+      </div>
+      <div class="category-card reveal stagger-1">
+        <div class="category-icon-box"><i data-lucide="camera"></i></div>
+        <h4 data-en="Photography" data-fr="Photographie" data-ar="تصوير">Photography</h4>
+      </div>
+      <div class="category-card reveal stagger-2">
+        <div class="category-icon-box"><i data-lucide="share-2"></i></div>
+        <h4 data-en="Social Media" data-fr="Réseaux Sociaux" data-ar="التواصل الاجتماعي">Social Media</h4>
+      </div>
+      <div class="category-card reveal stagger-3">
+        <div class="category-icon-box"><i data-lucide="book-open"></i></div>
+        <h4 data-en="Tutoring &amp; Lessons" data-fr="Cours &amp; Tutorat" data-ar="دروس خصوصية">Tutoring &amp; Lessons</h4>
+      </div>
+      <div class="category-card reveal stagger-4">
+        <div class="category-icon-box"><i data-lucide="plus-circle"></i></div>
+        <h4 data-en="And much more…" data-fr="Et bien plus…" data-ar="والمزيد…">And much more…</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TRUST / WHY TASKY ═══════════════ -->
+<section id="trust" class="trust-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="overline"><i data-lucide="shield-check"></i> <span data-en="Why Tasky?" data-fr="Pourquoi Tasky ?" data-ar="لماذا Tasky؟">Why Tasky?</span></div>
+      <h2 data-en="Built around genuine trust." data-fr="Construit autour de la confiance." data-ar="مبني على الثقة.">Built around genuine trust.</h2>
+    </div>
+    <div class="trust-grid">
+      <ul class="trust-list">
+        <li class="reveal stagger-1">
+          <div class="trust-icon"><i data-lucide="star"></i></div>
+          <div>
+            <h4 data-en="Verifiable Reviews" data-fr="Avis vérifiables" data-ar="تقييمات حقيقية">Verifiable Reviews</h4>
+            <p data-en="Both sides leave feedback after every mission. No anonymous claims, just open transparency." data-fr="Les deux parties laissent un avis. Pas d'anonymat, que de la transparence." data-ar="الطرفان يتركان تقييماً. بدون هويات مجهولة، فقط شفافية.">Both sides leave feedback after every mission. No anonymous claims, just open transparency.</p>
+          </div>
+        </li>
+        <li class="reveal stagger-2">
+          <div class="trust-icon"><i data-lucide="badge-check"></i></div>
+          <div>
+            <h4 data-en="Identity Badges" data-fr="Vérification d'identité" data-ar="التحقق من الهوية">Identity Badges</h4>
+            <p data-en="Optional badges to demonstrate student enrollment and government ID verification." data-fr="Des badges pour attester que l'identité ou le statut étudiant ont été vérifiés." data-ar="شارات تثبت أن الهوية أو صفة الطالب تم التحقق منها.">Optional badges to demonstrate student enrollment and government ID verification.</p>
+          </div>
+        </li>
+        <li class="reveal stagger-3">
+          <div class="trust-icon"><i data-lucide="map-pin"></i></div>
+          <div>
+            <h4 data-en="Made for Algeria" data-fr="Conçu pour l'Algérie" data-ar="مصمم للجزائر">Made for Algeria</h4>
+            <p data-en="Available in Arabic, French, and English. Tailored to the local culture and realities of Algerian cities." data-fr="En arabe, français et anglais. Adapté au contexte local et aux réalités du marché algérien." data-ar="بالعربية والفرنسية والإنجليزية. مكيّف مع السياق المحلي وواقع السوق الجزائري.">Available in Arabic, French, and English. Tailored to the local culture and realities of Algerian cities.</p>
+          </div>
+        </li>
+        <li class="reveal stagger-4">
+          <div class="trust-icon"><i data-lucide="user-check"></i></div>
+          <div>
+            <h4 data-en="Transparent Profiles" data-fr="Profils complets" data-ar="ملفات شخصية كاملة">Transparent Profiles</h4>
+            <p data-en="Skills, portfolio samples, and real reviews — examine everything before making your choice." data-fr="Compétences, portfolio, avis – consultez tout avant de choisir quelqu'un." data-ar="المهارات، الأعمال، التقييمات – تصفح كل شيء قبل الاختيار.">Skills, portfolio samples, and real reviews — examine everything before making your choice.</p>
+          </div>
+        </li>
+      </ul>
+      <div class="trust-visual reveal from-right">
+        <div class="trust-card-stack">
+          <div class="trust-floating-card tfc-1">
+            <div class="tfc-stars">
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+            </div>
+            <div class="tfc-name" data-en="Amina K." data-fr="Amina K." data-ar="أمينة ك.">Amina K.</div>
+            <div class="tfc-role" data-en="Graphic Design" data-fr="Design graphique" data-ar="تصميم جرافيكي">Graphic Design</div>
+            <div class="tfc-badge"><i data-lucide="check-circle-2"></i> <span data-en="Verified Student" data-fr="Étudiante vérifiée" data-ar="طالبة موثقة">Verified Student</span></div>
+          </div>
+          <div class="trust-floating-card tfc-2">
+            <div class="tfc-stars">
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+            </div>
+            <div class="tfc-name" data-en="Yacine M." data-fr="Yacine M." data-ar="ياسين م.">Yacine M.</div>
+            <div class="tfc-role" data-en="Video Editing" data-fr="Montage vidéo" data-ar="مونتاج فيديو">Video Editing</div>
+            <div class="tfc-badge"><i data-lucide="check-circle-2"></i> <span data-en="Verified ID" data-fr="Identité vérifiée" data-ar="هوية موثقة">Verified ID</span></div>
+          </div>
+          <div class="trust-floating-card tfc-3">
+            <div class="tfc-stars">
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star"></i>
+              <i data-lucide="star" class="lucide-star empty"></i>
+            </div>
+            <div class="tfc-name" data-en="Sara B." data-fr="Sara B." data-ar="سارة ب.">Sara B.</div>
+            <div class="tfc-role" data-en="Translation AR/FR/EN" data-fr="Traduction AR/FR" data-ar="ترجمة عربي/فرنسي">Translation AR/FR/EN</div>
+            <div class="tfc-badge"><i data-lucide="check-circle-2"></i> <span data-en="Verified Student" data-fr="Étudiante vérifiée" data-ar="طالبة موثقة">Verified Student</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TRANSPARENCY NOTE ═══════════════ -->
+<section class="notice-section">
+  <div class="container">
+    <div class="notice-banner reveal">
+      <div class="notice-icon"><i data-lucide="lightbulb"></i></div>
+      <div>
+        <h3 data-en="Good to know" data-fr="Bon à savoir" data-ar="ملاحظة مهمة">Good to know</h3>
+        <p data-en="Tasky connects people directly. Payments are agreed upon and handled directly between users, not processed in-app. Verification badges (student ID, national ID) indicate identity checks were performed; they do not constitute an absolute guarantee of work quality." data-fr="Tasky met les personnes en relation. Les paiements sont convenus directement entre les utilisateurs et ne passent pas par l'application. Les badges (étudiant, pièce d'identité) indiquent qu'une vérification a été effectuée ; ils ne constituent pas une garantie absolue." data-ar="Tasky تربط بين الأشخاص فقط. يتفق المستخدمون على المدفوعات مباشرة ولا تتم عبر التطبيق. شارات التحقق (طالب، هوية) تشير إلى إجراء عملية تحقق ولا تُعد ضماناً مطلقاً.">Tasky connects people directly. Payments are agreed upon and handled directly between users, not processed in-app. Verification badges (student ID, national ID) indicate identity checks were performed; they do not constitute an absolute guarantee of work quality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA / WAITLIST ═══════════════ -->
+<section id="waitlist" class="cta-section">
+  <div class="container">
+    <div class="cta-content reveal from-scale">
+      <h2 data-en="Be among the first." data-fr="Soyez parmi les premiers." data-ar="كن من الأوائل.">Be among the first.</h2>
+      <p data-en="Tasky is launching soon. Join our early waitlist to get notified the day we release on Android." data-fr="Tasky arrive bientôt. Inscrivez-vous pour être informé dès le lancement sur Android." data-ar="Tasky قادم قريباً. سجّل لتكون أول من يعلم عند الإطلاق على أندرويد.">Tasky is launching soon. Join our early waitlist to get notified the day we release on Android.</p>
+      <form class="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input type="email" class="waitlist-input" required
+          placeholder="your@email.com"
+          data-en-placeholder="your@email.com"
+          data-fr-placeholder="votre@email.com"
+          data-ar-placeholder="بريدك@الإلكتروني.com"
+          aria-label="Email">
+        <button type="submit" class="waitlist-submit">
+          <span data-en="Join Waitlist" data-fr="Rejoindre" data-ar="انضم">Join Waitlist</span>
+          <i data-lucide="arrow-right" class="btn-icon arrow-icon"></i>
+        </button>
+      </form>
+      <p class="cta-note" data-en="No spam ever. We only notify you when Tasky goes live." data-fr="Pas de spam. On vous prévient juste pour le lancement." data-ar="بدون إزعاج. نبلغك فقط عند الإطلاق.">No spam ever. We only notify you when Tasky goes live.</p>
+      <div class="download-buttons">
+        <button class="download-btn" type="button" disabled aria-disabled="true">
+          <i data-lucide="smartphone"></i>
+          <span data-en="Android – Coming Soon" data-fr="Android – Bientôt disponible" data-ar="أندرويد – قريباً">Android – Coming Soon</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="assets/Logo flat - colored.png" alt="Tasky" height="30" style="object-fit:contain;">
+    </div>
+    <ul class="footer-links">
+      <li><a href="#features" data-en="Features" data-fr="Fonctionnalités" data-ar="المميزات">Features</a></li>
+      <li><a href="#how" data-en="How It Works" data-fr="Comment ça marche" data-ar="كيف يعمل">How It Works</a></li>
+      <li><a href="#waitlist" data-en="Join" data-fr="Rejoindre" data-ar="انضم">Join</a></li>
+    </ul>
+    <p class="footer-copy">
+      <span data-en="© 2026 Tasky. All rights reserved. Crafted with" data-fr="© 2026 Tasky. Tous droits réservés. Conçu avec" data-ar="© 2026 Tasky. جميع الحقوق محفوظة. صُمّم بـ">© 2026 Tasky. All rights reserved. Crafted with</span>
+      <i data-lucide="heart" class="heart-icon"></i>
+      <span data-en="to empower local talents in Algeria." data-fr="pour connecter les talents locaux en Algérie." data-ar="لربط المواهب المحلية في الجزائر.">to empower local talents in Algeria.</span>
+    </p>
+  </div>
+</footer>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+/* ── Smooth scrolling ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href');
+    if (id === '#') { window.scrollTo({ top:0, behavior:'smooth' }); return; }
+    const el = document.querySelector(id);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    // close mobile menu
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('menuToggle').classList.remove('open');
+    document.getElementById('menuToggle').setAttribute('aria-expanded','false');
+  });
+});
+
+/* ── Mobile menu ── */
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+menuToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = navLinks.classList.toggle('open');
+  menuToggle.classList.toggle('open');
+  menuToggle.setAttribute('aria-expanded', open);
+});
+document.addEventListener('click', (e) => {
+  if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+    navLinks.classList.remove('open');
+    menuToggle.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open');
+    menuToggle.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* ── Header shadow on scroll ── */
+const header = document.querySelector('.header');
+const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 50);
+window.addEventListener('scroll', onScroll, { passive:true });
+onScroll();
+
+/* ── Scroll-triggered reveal ── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold:0.08, rootMargin:'0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ── Parallax orbs on mouse move ── */
+document.addEventListener('mousemove', e => {
+  const x = (e.clientX / window.innerWidth - .5) * 2;
+  const y = (e.clientY / window.innerHeight - .5) * 2;
+  document.querySelectorAll('.hero-orb').forEach((orb, i) => {
+    const speed = (i + 1) * 8;
+    orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+  });
+});
+
+/* ── Language switcher (EN / FR / AR) ── */
+let currentLang = 'en';
+
+function setLanguage(lang) {
+  if (!['en', 'fr', 'ar'].includes(lang)) return;
+  currentLang = lang;
+  const html = document.documentElement;
+  const body = document.body;
+
+  html.lang = currentLang;
+  html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  body.classList.toggle('rtl', currentLang === 'ar');
+
+  // Update active button state
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+  });
+
+  // Update translatable text elements
+  document.querySelectorAll('[data-en][data-fr][data-ar]').forEach(el => {
+    const text = el.getAttribute('data-' + currentLang);
+    if (!text) return;
+    if (el.tagName === 'INPUT') return; // placeholders handled separately
+    if (el.children.length === 0) {
+      el.textContent = text;
+    } else {
+      el.innerHTML = text;
+    }
+  });
+
+  // Update placeholders
+  document.querySelectorAll('[data-en-placeholder][data-fr-placeholder][data-ar-placeholder]').forEach(el => {
+    const ph = el.getAttribute(`data-${currentLang}-placeholder`);
+    if (ph) el.placeholder = ph;
+  });
+
+  // Refresh Lucide icons if any HTML was re-rendered
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+}
+
+/* ── Waitlist form ── */
+function handleWaitlist(e) {
+  e.preventDefault();
+  const input = e.target.querySelector('input[type="email"]');
+  const btn = e.target.querySelector('.waitlist-submit');
+  const span = btn.querySelector('span');
+  const origText = span ? span.textContent : btn.textContent;
+  const successText = currentLang === 'ar' ? 'تم التسجيل!' : (currentLang === 'fr' ? 'Inscrit !' : '✓ Joined!');
+  if (span) {
+    span.textContent = successText;
+  } else {
+    btn.textContent = successText;
+  }
+  btn.style.background = '#10b981';
+  input.value = '';
+  setTimeout(() => {
+    if (span) {
+      span.textContent = origText;
+    } else {
+      btn.textContent = origText;
+    }
+    btn.style.background = '';
+  }, 3000);
+}
+
+// Initial Lucide icons initialization
+if (window.lucide) {
+  lucide.createIcons();
+}
+</script>
+</body>
+</html>
